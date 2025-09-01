@@ -59,7 +59,7 @@ spec:
         runAsGroup: 472
       containers:
         - name: grafana
-          image: grafana/grafana:latest
+          image: grafana/grafana:12.1.1
           ports:
             - containerPort: 3000
               name: http
