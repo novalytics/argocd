@@ -42,7 +42,7 @@ metadata:
   name: grafana-deployment-1
   namespace: grafana-training
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: grafana
