@@ -8,11 +8,11 @@ spec:
   source:
     # This points to the official Cloudflare Helm chart repository
     repoURL: https://cloudflare.github.io/helm-charts
-    # --- UPDATED LINE ---
     # The chart has been renamed from 'cloudflare-tunnel' to 'tunnel'.
     chart: tunnel
-    # --- REMOVED LINE ---
-    # The targetRevision is removed to allow ArgoCD to fetch the latest stable version.
+    # --- ADDED BACK ---
+    # Adding back the targetRevision to satisfy the ArgoCD requirement.
+    targetRevision: 0.3.2
     helm:
       # These are the values that you were putting in your values.yaml file.
       # We are using the 'config' block method that we found to be most reliable.
