@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: grafana/grafana:11.1.0 # Use a specific, recent version
+          image: grafana/grafana:latest
           ports:
             - containerPort: 3000
               name: http
