@@ -11,7 +11,7 @@ spec:
     chart: raw
     # --- UPDATED LINE ---
     # Using a more recent, available version of the chart.
-    targetRevision: 1.4.1
+    targetRevision: 2.3.11
     helm:
       # The 'resources' key is used by the 'raw' chart.
       # We provide your entire Deployment manifest here.
@@ -56,8 +56,8 @@ spec:
                         - --metrics
                         - 0.0.0.0:2000
                         - run
-                        # --- FIXED --- Added the tunnel name here
-                        - ks3
+                        # --- FIXED --- Corrected tunnel name typo
+                        - k3s
                       livenessProbe:
                         httpGet:
                           path: /ready
