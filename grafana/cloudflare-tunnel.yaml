@@ -12,7 +12,7 @@ spec:
     chart: cloudflare-tunnel
     # --- ADDED BACK ---
     # Adding back the targetRevision to satisfy the ArgoCD requirement.
-    targetRevision: latest
+    targetRevision: 0.3.2
     helm:
       # These are the values that you were putting in your values.yaml file.
       # We are using the 'config' block method that we found to be most reliable.
