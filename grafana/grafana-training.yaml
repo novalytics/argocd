@@ -53,6 +53,12 @@ spec:
         app.kubernetes.io/name: grafana
         app.kubernetes.io/instance: grafana-1
     spec:
+      # --- ADDED SECTION ---
+      # This security context solves the file permission error.
+      # It ensures the mounted volume is owned by the Grafana user's group (472),
+      # granting the necessary write permissions to the /var/lib/grafana directory.
+      securityContext:
+        fsGroup: 472
       containers:
         - name: grafana
           image: grafana/grafana:11.1.0 # Use a specific, recent version
@@ -62,13 +68,11 @@ spec:
           envFrom:
             - secretRef:
                 name: grafana-admin-secret
-          # --- MODIFIED SECTION ---
-          # Increased delays to give Grafana more time to start up before probes begin.
           readinessProbe:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 45 # Increased from 10
+            initialDelaySeconds: 45
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
@@ -76,7 +80,7 @@ spec:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 60 # Increased from 30
+            initialDelaySeconds: 60
             periodSeconds: 20
             timeoutSeconds: 5
             failureThreshold: 3
@@ -96,7 +100,6 @@ metadata:
 spec:
   selector:
     app.kubernetes.io/instance: grafana-1
-  # Corrected section: The 'ports' block was duplicated. This is the correct syntax.
   ports:
     - protocol: TCP
       port: 80
