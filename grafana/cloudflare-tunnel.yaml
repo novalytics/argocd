@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflare-tunnel
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # This points to the official Cloudflare Helm chart repository
+    repoURL: https://cloudflare.github.io/helm-charts
+    chart: cloudflare-tunnel
+    targetRevision: 1.8.0 # Use a specific chart version for consistency
+    helm:
+      // These are the values that you were putting in your values.yaml file.
+      // We are using the 'config' block method that we found to be most reliable.
+      values: |
+        tunnelTokenSecret:
+          name: cloudflared-token
+          key: token
+
+        config: |
+          tunnel: k3s
+          ingress:
+            - hostname: grafana.echosix.io
+              service: http://grafana-service-1.grafana-training:80
+            - service: http_status:404
+  destination:
+    server: https://kubernetes.default.svc
+    # The namespace where the tunnel will be deployed
+    namespace: cloudflare
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # This will automatically create the 'cloudflare' namespace if it doesn't exist
+      - CreateNamespace=true
