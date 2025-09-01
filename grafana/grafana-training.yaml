@@ -41,7 +41,6 @@ metadata:
   name: grafana-deployment-1
   namespace: grafana-training
 spec:
-  # This line ensures that only one pod (replica) will ever be running for this deployment.
   replicas: 1
   selector:
     matchLabels:
@@ -53,37 +52,33 @@ spec:
         app.kubernetes.io/name: grafana
         app.kubernetes.io/instance: grafana-1
     spec:
-      # --- ADDED SECTION ---
-      # This security context solves the file permission error.
-      # It ensures the mounted volume is owned by the Grafana user's group (472),
-      # granting the necessary write permissions to the /var/lib/grafana directory.
+      # This securityContext ensures the volume is writable by the Grafana user
       securityContext:
         fsGroup: 472
+        runAsUser: 472
+        runAsGroup: 472
       containers:
         - name: grafana
-          image: grafana/grafana:11.1.0 # Use a specific, recent version
+          image: grafana/grafana:latest
           ports:
             - containerPort: 3000
               name: http
           envFrom:
             - secretRef:
                 name: grafana-admin-secret
+          # Increased delays to allow Grafana time to start before checking health
           readinessProbe:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 45
+            initialDelaySeconds: 30
             periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /api/health
               port: http
             initialDelaySeconds: 60
             periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 3
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
@@ -98,10 +93,12 @@ metadata:
   name: grafana-service-1
   namespace: grafana-training
 spec:
+  # This line exposes the service on your local network by requesting an IP
+  # from your cluster's load balancer pool (e.g., Klipper in K3s).
+  type: LoadBalancer
   selector:
     app.kubernetes.io/instance: grafana-1
   ports:
     - protocol: TCP
       port: 80
       targetPort: 3000
-
