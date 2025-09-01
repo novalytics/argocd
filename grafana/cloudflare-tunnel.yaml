@@ -9,7 +9,7 @@ spec:
     # This points to the official Cloudflare Helm chart repository
     repoURL: https://cloudflare.github.io/helm-charts
     # The chart has been renamed from 'cloudflare-tunnel' to 'tunnel'.
-    chart: tunnel
+    chart: cloudflare-tunnel
     # --- ADDED BACK ---
     # Adding back the targetRevision to satisfy the ArgoCD requirement.
     targetRevision: 0.3.2
