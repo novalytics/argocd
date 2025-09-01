@@ -11,8 +11,8 @@ spec:
     chart: cloudflare-tunnel
     targetRevision: 1.8.0 # Use a specific chart version for consistency
     helm:
-      // These are the values that you were putting in your values.yaml file.
-      // We are using the 'config' block method that we found to be most reliable.
+      # These are the values that you were putting in your values.yaml file.
+      # We are using the 'config' block method that we found to be most reliable.
       values: |
         tunnelTokenSecret:
           name: cloudflared-token
