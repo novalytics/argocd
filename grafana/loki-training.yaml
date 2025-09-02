@@ -16,9 +16,14 @@ spec:
     helm:
       # These values configure the Loki Helm chart for a simple setup
       values: |
+        # --- FIX ---
+        # Disable the default scalable mode
         loki:
-          # Use the efficient single binary mode, perfect for K3s
-          deploymentMode: SingleBinary
+          enabled: false
+
+        # Enable the single-binary deployment mode
+        singleBinary:
+          enabled: true
           # For a local/training setup, auth can be disabled for simplicity
           auth_enabled: false
           # Configure Loki to use a PersistentVolumeClaim for storage
@@ -40,7 +45,6 @@ spec:
         gateway:
           enabled: false
 
-        # --- FIX ---
         # Explicitly disable scalable components to satisfy chart validation
         backend:
           enabled: false
