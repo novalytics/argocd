@@ -16,26 +16,23 @@ spec:
     helm:
       # These values configure the Loki Helm chart for a simple setup
       values: |
-        # --- FIX ---
-        # Disable the default scalable mode
         loki:
           enabled: false
+          # --- FIX ---
+          # The chart's helpers expect the storage config to be here,
+          # even when deploying in singleBinary mode.
+          storage:
+            type: 'filesystem'
+            filesystem:
+              pvc:
+                size: 10Gi
+                storageClassName: longhorn
 
         # Enable the single-binary deployment mode
         singleBinary:
           enabled: true
           # For a local/training setup, auth can be disabled for simplicity
           auth_enabled: false
-          # Configure Loki to use a PersistentVolumeClaim for storage
-          storage:
-            type: 'filesystem'
-            filesystem:
-              # This will create a PVC for log storage
-              pvc:
-                # Set the desired size for the log volume
-                size: 10Gi
-                # Specify 'longhorn' as the storage class
-                storageClassName: longhorn
           # This section enables the service and exposes it via a LoadBalancer
           service:
             type: LoadBalancer
