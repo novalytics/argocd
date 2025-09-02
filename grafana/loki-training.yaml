@@ -40,6 +40,15 @@ spec:
         gateway:
           enabled: false
 
+        # --- FIX ---
+        # Explicitly disable scalable components to satisfy chart validation
+        backend:
+          enabled: false
+        read:
+          enabled: false
+        write:
+          enabled: false
+
   destination:
     # Deploy Loki into its own dedicated namespace
     namespace: loki-stack
