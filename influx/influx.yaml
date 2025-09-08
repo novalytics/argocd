@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # The name of the application in ArgoCD
+  name: influxdb
+  # ArgoCD applications must be created in the argocd namespace
+  namespace: argocd
+spec:
+  # Link to the ArgoCD project
+  project: default
+
+  # Source of the deployment files
+  source:
+    # The URL of the Helm repository
+    repoURL: https://helm.influxdata.com/
+    # The name of the chart to deploy
+    chart: influxdb2
+    # Specify a chart version for consistent deployments
+    targetRevision: 2.1.0
+    helm:
+      # Override default values from the Helm chart
+      values: |
+        # Persistence configuration
+        persistence:
+          # Enable persistent storage for InfluxDB data
+          enabled: true
+          # Set the storage size to 2 Gigabytes
+          size: 2Gi
+          # Depending on your Kubernetes environment, you may need to specify a StorageClass.
+          # For example:
+          # storageClassName: "your-storage-class"
+
+        # Service configuration
+        service:
+          # Expose InfluxDB with a LoadBalancer service.
+          # This will provision an external IP address from your cloud provider
+          # or an IP from a pre-configured pool if using a bare-metal solution like MetalLB.
+          type: LoadBalancer
+
+  # Destination cluster and namespace
+  destination:
+    # URL of the target Kubernetes cluster (use default for in-cluster)
+    server: https://kubernetes.default.svc
+    # The namespace where InfluxDB will be deployed
+    namespace: influxdb
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      # Automatically delete resources that are removed from the source chart
+      prune: true
+      # Automatically sync the application when it deviates from the desired state
+      selfHeal: true
+    syncOptions:
+      # Instructs ArgoCD to create the destination namespace if it does not exist
+      - CreateNamespace=true
