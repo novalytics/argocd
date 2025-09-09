@@ -1,4 +1,4 @@
-f# ===================================================================
+# ===================================================================
 # Namespace for all Grafana training environments
 # ===================================================================
 apiVersion: v1
@@ -18,6 +18,22 @@ metadata:
 stringData:
   # This environment variable sets the admin password for all Grafana instances
   GF_SECURITY_ADMIN_PASSWORD: "grafana"
+
+---
+# ===================================================================
+# Shared Secret for Grafana SMTP Settings
+# ===================================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-smtp-secret
+  namespace: grafana-training
+stringData:
+  # Environment variables for SMTP credentials
+  GF_SMTP_HOST: "mail.delta.nl:465"
+  GF_SMTP_USER: "j.s.van1@delta.nl"
+  GF_SMTP_PASSWORD: |-
+    Mv2Up$3&M#J5ejV3k&m
 
 ---
 # ===================================================================
@@ -62,9 +78,18 @@ spec:
           ports:
             - containerPort: 3000
               name: http
+          env:
+            - name: GF_SMTP_ENABLED
+              value: "true"
+            - name: GF_SMTP_FROM_ADDRESS
+              value: "j.s.van1@delta.nl"
+            - name: GF_SMTP_FROM_NAME
+              value: "Grafana Training 1"
           envFrom:
             - secretRef:
                 name: grafana-admin-secret
+            - secretRef:
+                name: grafana-smtp-secret
           readinessProbe:
             httpGet:
               path: /api/health
@@ -142,9 +167,18 @@ spec:
           ports:
             - containerPort: 3000
               name: http
+          env:
+            - name: GF_SMTP_ENABLED
+              value: "true"
+            - name: GF_SMTP_FROM_ADDRESS
+              value: "j.s.van1@delta.nl"
+            - name: GF_SMTP_FROM_NAME
+              value: "Grafana Training 2"
           envFrom:
             - secretRef:
                 name: grafana-admin-secret
+            - secretRef:
+                name: grafana-smtp-secret
           readinessProbe:
             httpGet:
               path: /api/health
@@ -222,9 +256,18 @@ spec:
           ports:
             - containerPort: 3000
               name: http
+          env:
+            - name: GF_SMTP_ENABLED
+              value: "true"
+            - name: GF_SMTP_FROM_ADDRESS
+              value: "j.s.van1@delta.nl"
+            - name: GF_SMTP_FROM_NAME
+              value: "Grafana Training 3"
           envFrom:
             - secretRef:
                 name: grafana-admin-secret
+            - secretRef:
+                name: grafana-smtp-secret
           readinessProbe:
             httpGet:
               path: /api/health
@@ -302,9 +345,18 @@ spec:
           ports:
             - containerPort: 3000
               name: http
+          env:
+            - name: GF_SMTP_ENABLED
+              value: "true"
+            - name: GF_SMTP_FROM_ADDRESS
+              value: "j.s.van1@delta.nl"
+            - name: GF_SMTP_FROM_NAME
+              value: "Grafana Training 4"
           envFrom:
             - secretRef:
                 name: grafana-admin-secret
+            - secretRef:
+                name: grafana-smtp-secret
           readinessProbe:
             httpGet:
               path: /api/health
