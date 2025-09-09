@@ -26,9 +26,9 @@ spec:
           enabled: true
           # Set the storage size to 2 Gigabytes
           size: 2Gi
-          # Depending on your Kubernetes environment, you may need to specify a StorageClass.
-          # For example:
-          # storageClassName: "your-storage-class"
+          # Specify the StorageClass to be used by the PersistentVolumeClaim.
+          # This is likely the primary reason for the deployment failure.
+          storageClassName: "longhorn"
 
         # Service configuration
         service:
@@ -36,6 +36,15 @@ spec:
           # This will provision an external IP address from your cloud provider
           # or an IP from a pre-configured pool if using a bare-metal solution like MetalLB.
           type: LoadBalancer
+
+        # PodDisruptionBudget configuration
+        # The Helm chart does not create a PDB by default.
+        # This explicitly enables it as requested.
+        pdb:
+          create: true
+          # A PDB is most effective with more than one replica.
+          minAvailable: 1
+
 
   # Destination cluster and namespace
   destination:
@@ -54,3 +63,4 @@ spec:
     syncOptions:
       # Instructs ArgoCD to create the destination namespace if it does not exist
       - CreateNamespace=true
+
